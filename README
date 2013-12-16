@@ -1,0 +1,3 @@
+mvn clean install
+mvn dependency:copy-dependencies
+sh run.sh

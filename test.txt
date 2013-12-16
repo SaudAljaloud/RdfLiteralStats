@@ -1,0 +1,24 @@
+en
+en
+text/html
+text/html
+World Wide Web Home Page
+World Wide Web Home Page
+1995-01-07
+1995-01-07
+Corporation For National Research Initiatives
+Corporation For National Research Initiatives
+The D-Lib program supports the community of people
+       with research interests in digital libraries and electronic
+       publishing.
+The D-Lib program supports the community of people
+       with research interests in digital libraries and electronic
+       publishing.
+D-Lib Program - Research in Digital Libraries
+D-Lib Program - Research in Digital Libraries
+Library use Studies
+Library use Studies
+Education, research, related topics
+Education, research, related topics
+Research; statistical methods
+Research; statistical methods

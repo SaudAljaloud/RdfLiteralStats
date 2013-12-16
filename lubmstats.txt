@@ -1,0 +1,48 @@
+Table 1. Statistics of the LUBM fulltext datasets
+LUBMft(1)
+LUBMft(5)
+LUBMft(10)
+LUBMft(50)
+LUBMft(100)
+Universities
+1
+5
+10
+50
+100
+Person Names
+8,330
+51,955
+106,409
+555,815
+1,120,834
+Publications
+5,999
+37,854
+76,529
+402,142
+808,741
+Unique Terms
+17,611
+28,171
+32,438
+36,456
+36,518
+Terms
+6,032,320
+38,061,820
+76,954,636
+404,365,260
+813,224,336
+Statements
+134 k
+840 k
+1.7 M
+8.96 M
+18M
+Size (XML)
+56 MB
+356 MB
+719 MB
+3.8 GB
+7.6 GB
