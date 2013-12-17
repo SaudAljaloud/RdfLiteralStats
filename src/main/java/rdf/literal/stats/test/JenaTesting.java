@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.jena.riot.RiotException;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -66,13 +68,21 @@ public class JenaTesting {
 			File dir = new File(dataDir[0]);
 			File[] files = dir.listFiles();
 			for (File file : files) {
-				if (file.toString().contains("University")) {
+				if (file.toString().contains("rdf")) {
 					System.out.println(file.getAbsolutePath());
-					model.read(file.getAbsolutePath());
+					try{
+					model.read(file.getAbsolutePath(), "nquads");
+					}catch(RiotException e){
+						System.out.println("File will be skipped: " + file.getAbsolutePath());
+					}catch (Exception e) {
+						// TODO: handle exception
+						System.out.println("error");
+					}
 				}
 			}
 		} else {
-			model.read("/Users/saudaljaloud/RDFLiteralStats/ms_7.4_1.rdf");
+			model.read("category_labels_en.nq");
+			System.out.println("file loaded");
 		}
 	}
 
@@ -86,7 +96,7 @@ public class JenaTesting {
 			File dir = new File(dataDir[0]);
 			File[] files = dir.listFiles();
 			for (File file : files) {
-				if (file.toString().contains("University")) {
+				if (file.toString().contains("rdf")) {
 					System.out.println(file.getAbsolutePath());
 					model.read(file.getAbsolutePath());
 					i++;
