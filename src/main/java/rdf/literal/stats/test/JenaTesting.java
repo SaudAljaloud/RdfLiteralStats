@@ -81,7 +81,7 @@ public class JenaTesting {
 				}
 			}
 		} else {
-			model.read("category_labels_en.nq");
+			model.read("dfg.ttl");
 			System.out.println("file loaded");
 		}
 	}
