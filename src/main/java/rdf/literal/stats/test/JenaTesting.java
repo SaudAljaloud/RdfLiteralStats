@@ -5,12 +5,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.jena.riot.RiotException;
 
@@ -50,6 +52,7 @@ public class JenaTesting {
 		ts.printQueryResult();
 		ts.countLiteralSpace();
 		ts.wordSeperatorWithDuplicates();
+		ts.wordSeperatorNoDuplicates();
 		ts.wordSeperatorNoDuplicatesMap();
 
 		// ts.openBigData(args);
@@ -70,18 +73,19 @@ public class JenaTesting {
 			for (File file : files) {
 				if (file.toString().contains("rdf")) {
 					System.out.println(file.getAbsolutePath());
-					try{
-					model.read(file.getAbsolutePath(), "nquads");
-					}catch(RiotException e){
-						System.out.println("File will be skipped: " + file.getAbsolutePath());
-					}catch (Exception e) {
+					try {
+						model.read(file.getAbsolutePath(), "nquads");
+					} catch (RiotException e) {
+						System.out.println("File will be skipped: "
+								+ file.getAbsolutePath());
+					} catch (Exception e) {
 						// TODO: handle exception
 						System.out.println("error");
 					}
 				}
 			}
 		} else {
-			model.read("category_labels_en.nq");
+			model.read("category_labels_en.ttl");
 			System.out.println("file loaded");
 		}
 	}
@@ -260,22 +264,41 @@ public class JenaTesting {
 			for (String string2 : temp) {
 				if (wordlist.containsKey(string2)) {
 					Integer counter = wordlist.get(string2);
-					wordlist.put(string2, counter+=1);
+					wordlist.put(string2, counter + 1);
 				} else {
 					wordlist.put(string2, 1);
 				}
 			}
 		}
-		
-		wordlist = MapUtil.sortByValue( wordlist );
-		
 
-		Iterator iterator = wordlist.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = iterator.next().toString();
-			String value = wordlist.get(key).toString();
-			System.out.println(String.format("%-15s==> %s" , key, value));
+		wordlist = MapUtil.sortByValue(wordlist);
+
+		// /
+		Map<Integer, Integer> histogrsmMap = histogramCal(wordlist);
+		Map<Integer, Integer> sortedHistogramMap = new TreeMap<Integer, Integer>(
+				histogrsmMap);
+		Iterator<Integer> iterator3 = sortedHistogramMap.keySet().iterator();
+		while (iterator3.hasNext()) {
+			Integer key = iterator3.next();
+			Integer value = sortedHistogramMap.get(key);
+			System.out.println(String.format("%-15s\t %s", key, value));
 		}
+
+		// // to file
+		// Iterator iterator2 = wordlist.keySet().iterator();
+		// try {
+		// FileWriter fw = new FileWriter("result/WordOccuranceMap.txt", true);
+		// BufferedWriter bw = new BufferedWriter(fw);
+		// while (iterator2.hasNext()) {
+		// String key = iterator2.next().toString();
+		// String value = wordlist.get(key).toString();
+		// bw.write(String.format("%-15s\t %s", key, value));
+		// bw.newLine();
+		// }
+		// bw.close();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 	}
 
@@ -288,6 +311,32 @@ public class JenaTesting {
 				+ literalSpaceCounter);
 	}
 
-	
+	public Map<Integer, Integer> histogramCal(Map<String, Integer> wordlist) {
+
+		Map<Integer, Integer> histogram = new HashMap<Integer, Integer>();
+		Iterator<String> iterator = wordlist.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			Integer value = wordlist.get(key);
+
+			int[] ss = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 1000, 10000,
+					100000, 1000000, 10000000 };
+			for (int i = 0; i < ss.length; i++) {
+				if (ss[i] >= value || ss[i + 1] > value) {
+					if (histogram.containsKey(ss[i])) {
+						Integer counter = histogram.get(ss[i]);
+						histogram.put(ss[i], counter + 1);
+						break;
+					} else {
+						histogram.put(ss[i], 1);
+						break;
+					}
+				}
+			}
+
+		}
+
+		return histogram;
+	}
 
 }
