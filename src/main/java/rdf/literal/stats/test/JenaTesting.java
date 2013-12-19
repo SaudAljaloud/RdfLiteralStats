@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,9 +12,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.apache.jena.riot.lang.PipedRDFStream;
+import org.apache.jena.riot.lang.PipedTriplesStream;
 
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -46,9 +52,13 @@ public class JenaTesting {
 	String literalsFile = resultDir + "/Literals.txt";
 
 	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
+
+		
 		JenaTesting ts = new JenaTesting();
-		ts.openData(args);
-		ts.queryResultSet();
+//		ts.openData(args);
+//		ts.queryResultSet();
+		ts.runRiot();
 		ts.printQueryResult();
 		ts.countLiteralSpace();
 		ts.wordSeperatorWithDuplicates();
@@ -62,6 +72,10 @@ public class JenaTesting {
 		// ts.countLiteralSpace();
 		// ts.wordSeperatorWithDuplicates();
 		// ts.wordSeperatorNoDuplicates();
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("That took " + (endTime - startTime) / 1000
+				+ " milliseconds");
 	}
 
 	public void openData(String[] dataDir) {
@@ -166,6 +180,48 @@ public class JenaTesting {
 
 	}
 
+	public void runRiot() {
+		final String filename = "article_categories_en.ttl";
+
+		// Create a PipedRDFStream to accept input and a PipedRDFIterator to
+		// consume it
+		// You can optionally supply a buffer size here for the
+		// PipedRDFIterator, see the documentation for details about recommended
+		// buffer sizes
+
+		PipedRDFIterator<Triple> iter = new PipedRDFIterator<Triple>();
+		
+		final PipedRDFStream<Triple> inputStream = new PipedTriplesStream(iter);
+
+		// PipedRDFStream and PipedRDFIterator need to be on different threads
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+
+		// Create a runnable for our parser thread
+		Runnable parser = new Runnable() {
+
+			public void run() {
+				// Call the parsing process.
+				RDFDataMgr.parse(inputStream, filename);
+			}
+		};
+
+		// Start the parser on another thread
+		executor.submit(parser);
+
+		// We will consume the input on the main thread here
+
+		// We can now iterate over data as it is parsed, parsing only runs as
+		// far ahead of our consumption as the buffer size allows
+		while (iter.hasNext()) {
+			Triple next = iter.next();
+			if (next.getObject().isLiteral()) {
+				String literalLoxicalForm = next.getObject().getLiteralLexicalForm();
+				literalsListDuplicates.add(literalLoxicalForm);
+				literalsListNODuplicates.add(literalLoxicalForm);
+			}
+		}
+	}
+
 	public void queryResultSet() {
 
 		Query q = QueryFactory.create(query);
@@ -181,7 +237,6 @@ public class JenaTesting {
 			literalsListDuplicates.add(l.getLexicalForm());
 			literalsListNODuplicates.add(l.getLexicalForm());
 		}
-
 		// NodeIterator itr = model.listObjects();
 		// while (itr.hasNext()) {
 		// System.out.println(itr.next());
@@ -232,9 +287,11 @@ public class JenaTesting {
 				wordList.add(string2);
 			}
 		}
+		
 		// for (String string : wordList) {
 		// System.out.println(string);
 		// }
+
 		System.out.println("Number of words with duplicates: "
 				+ wordList.size());
 
