@@ -6,3 +6,4 @@ target/
 result/
 University0_0.owl
 category_lab*
+*.ttl

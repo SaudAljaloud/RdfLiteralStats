@@ -1,0 +1,1 @@
+java -Xmx8000m -cp target/dependency/*:target/stats-0.0.1-SNAPSHOT.jar rdf.literal.stats.Main $1 $2
