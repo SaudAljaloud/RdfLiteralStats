@@ -311,6 +311,7 @@ public class JenaTesting {
 				+ literalSpaceCounter);
 	}
 
+	
 	public Map<Integer, Integer> histogramCal(Map<String, Integer> wordlist) {
 
 		Map<Integer, Integer> histogram = new HashMap<Integer, Integer>();
