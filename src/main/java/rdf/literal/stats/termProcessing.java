@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,12 +19,14 @@ import rdf.literal.stats.test.MapUtil;
 
 public class termProcessing {
 
-	ArrayList<String> literalsListDuplicates;
+	List<String> literalsListDuplicates;
 	Set<String> literalsListNODuplicates;
-	Map<String, Integer> wordMap;
-	ArrayList<String> wordList;
+	Map<String, Integer> termMap;
+	List<String> wordList;
 	int threshold = 10000000;
-	String termsFile = "result/terms.txt";
+
+	final String termsFile = "result/terms.txt";
+	final String termMapFile = "result/termsMap.txt";
 	private Boolean wasDumped = false;
 	Boolean isTermMapConstructed = false;
 
@@ -35,16 +38,17 @@ public class termProcessing {
 		this.wasDumped = wasDumped;
 	}
 
+	// require literals to be in-memory
 	public termProcessing(ArrayList<String> literalsListDuplicates) {
 
 		// literal are all loaded into memory
 		this.literalsListDuplicates = literalsListDuplicates;
 		termMapConstruction();
-		printWordHistogram();
 	}
 
+	// accept literal from text file with a path
 	public termProcessing(String literalPath) {
-		wordMap = new HashMap<String, Integer>();
+		termMap = new HashMap<String, Integer>();
 		File in = new File(literalPath);
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(in));
@@ -52,11 +56,11 @@ public class termProcessing {
 			while ((line = reader.readLine()) != null) {
 				String[] temp = line.split("\\s+");
 				for (String string2 : temp) {
-					if (wordMap.containsKey(string2)) {
-						Integer counter = wordMap.get(string2);
-						wordMap.put(string2, counter + 1);
+					if (termMap.containsKey(string2)) {
+						Integer counter = termMap.get(string2);
+						termMap.put(string2, counter + 1);
 					} else {
-						wordMap.put(string2, 1);
+						termMap.put(string2, 1);
 					}
 
 				}
@@ -67,16 +71,17 @@ public class termProcessing {
 		}
 	}
 
+	// build a key-value map, term-occurances
 	private void termMapConstruction() {
-		wordMap = new HashMap<String, Integer>();
+		termMap = new HashMap<String, Integer>();
 		for (String string : literalsListDuplicates) {
 			String[] temp = string.split("\\s+");
 			for (String string2 : temp) {
-				if (wordMap.containsKey(string2)) {
-					Integer counter = wordMap.get(string2);
-					wordMap.put(string2, counter + 1);
+				if (termMap.containsKey(string2)) {
+					Integer counter = termMap.get(string2);
+					termMap.put(string2, counter + 1);
 				} else {
-					wordMap.put(string2, 1);
+					termMap.put(string2, 1);
 				}
 			}
 		}
@@ -85,10 +90,10 @@ public class termProcessing {
 
 	public void printWordHistogram() {
 		if (isTermMapConstructed) {
-			wordMap = MapUtil.sortByValue(wordMap);
+			termMap = MapUtil.sortByValue(termMap);
 
 			// /
-			Map<Integer, Integer> histogrsmMap = histogramCal(wordMap);
+			Map<Integer, Integer> histogrsmMap = histogramCal(termMap);
 			Map<Integer, Integer> sortedHistogramMap = new TreeMap<Integer, Integer>(
 					histogrsmMap);
 			Iterator<Integer> iterator3 = sortedHistogramMap.keySet()
@@ -105,16 +110,16 @@ public class termProcessing {
 		}
 	}
 
-	public Map<Integer, Integer> histogramCal(Map<String, Integer> wordlist) {
-
+	// build a key-value map as histogram of occurances
+	public Map<Integer, Integer> histogramCal(Map<String, Integer> termMap) {
+		int[] ss = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 1000, 10000, 100000,
+				1000000, 10000000 };
 		Map<Integer, Integer> histogram = new HashMap<Integer, Integer>();
-		Iterator<String> iterator = wordlist.keySet().iterator();
+		Iterator<String> iterator = termMap.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			Integer value = wordlist.get(key);
+			Integer value = termMap.get(key);
 
-			int[] ss = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 1000, 10000,
-					100000, 1000000, 10000000 };
 			for (int i = 0; i < ss.length; i++) {
 				if (ss[i] >= value || ss[i + 1] > value) {
 					if (histogram.containsKey(ss[i])) {
@@ -133,7 +138,7 @@ public class termProcessing {
 		return histogram;
 	}
 
-	private void wordSeperatorWithDuplicates2() {
+	public void wordSeperatorWithDuplicates2() {
 
 		wordList = new ArrayList<String>();
 		int i = 0; // counter of when to dump list to disk
@@ -153,7 +158,7 @@ public class termProcessing {
 
 	}
 
-	private void wordSeperatorWithDuplicates2FromFile(String literalPath) {
+	public void wordSeperatorWithDuplicates2FromFile(String literalPath) {
 		wordList = new ArrayList<String>();
 		File in = new File(literalPath);
 		try {
@@ -194,9 +199,38 @@ public class termProcessing {
 
 	}
 
+	public void printTermMapToFile() {
+		if (isTermMapConstructed) {
+			try {
+				FileWriter fw = new FileWriter(termMapFile, false);
+				BufferedWriter bw = new BufferedWriter(fw);
+
+				Iterator<String> itr = termMap.keySet().iterator();
+				while (itr.hasNext()) {
+					String key = itr.next();
+					Integer value = termMap.get(key);
+					bw.write(String.format("%-15s\t %s", key, value));
+					bw.newLine();
+
+				}
+
+				bw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void printWordCount() {
-		System.out.println("Number of words with duplicates: "
-				+ wordList.size());
+		Iterator<String> itr = termMap.keySet().iterator();
+		int termCounter = 0;
+		while (itr.hasNext()) {
+			String key = itr.next();
+			Integer value = termMap.get(key);
+			termCounter = termCounter + value;
+		}
+
+		System.out.println("Number of words with duplicates: " + termCounter);
 	}
 
 }
