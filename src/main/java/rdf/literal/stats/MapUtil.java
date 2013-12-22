@@ -1,4 +1,4 @@
-package rdf.literal.stats.test;
+package rdf.literal.stats;
 
 import java.util.*;
 

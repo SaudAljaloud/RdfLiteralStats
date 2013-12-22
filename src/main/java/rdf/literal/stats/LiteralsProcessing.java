@@ -6,8 +6,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,10 +23,16 @@ import org.apache.jena.riot.lang.PipedRDFStream;
 import org.apache.jena.riot.lang.PipedTriplesStream;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.sparql.function.library.date;
 
 public class LiteralsProcessing {
 
 	int tripleCounter = 0;
+
+	int plainLiteral = 0;
+	int typedLiteral = 0;
+
+	Map<String, Integer> otherLiteralTypesMap = new HashMap<String, Integer>();
 
 	final int threshold = 1000000;
 	final String literalsFile = "result/Literals.txt";
@@ -87,7 +98,22 @@ public class LiteralsProcessing {
 			Triple next = iter.next();
 			tripleCounter++;
 			if (next.getObject().isLiteral()) {
-				System.out.println(next.getObject().getLiteralDatatype());
+
+				if (next.getObject().getLiteralDatatype() == null) {
+					plainLiteral++;
+				} else {
+					typedLiteral++;
+
+					String temp = next.getObject().getLiteralDatatype()
+							.getURI();
+					if (otherLiteralTypesMap.containsKey(temp)) {
+						Integer value = otherLiteralTypesMap.get(temp);
+						otherLiteralTypesMap.put(temp, value + 1);
+					} else {
+						otherLiteralTypesMap.put(temp, 1);
+					}
+
+				}
 				String literalLoxicalForm = next.getObject()
 						.getLiteralLexicalForm();
 				literalsListDuplicates.add(literalLoxicalForm);
@@ -141,12 +167,17 @@ public class LiteralsProcessing {
 	}
 
 	public void printLiteralCount() {
-		System.out.println("Number of Triples: " + tripleCounter);
 		System.out.println("Number of Literal objects with duplicates: "
 				+ getLiteralsListDuplicates().size());
 		System.out.println("Number of Literal objects NO duplicates: "
 				+ getLiteralsListNODuplicates().size());
 
+	}
+
+	public void printLiteralRatioAgainstTriples() {
+		System.out
+				.println("Average literals against triples: "
+						+ ((float) getLiteralsListDuplicates().size() / (float) tripleCounter));
 	}
 
 	public void printLiterlAverageLength() {
@@ -158,5 +189,26 @@ public class LiteralsProcessing {
 
 		System.out.println("The average length of literals: " + length
 				/ getLiteralsListDuplicates().size());
+	}
+
+	public void printTriplesCount() {
+		System.out.println("Triples Count: " + tripleCounter);
+
+	}
+
+	public void printliteralTypesStats() {
+		System.out.println("Plain Literals: " + plainLiteral);
+		System.out.println("Typed-Literals: " + typedLiteral);
+
+	}
+
+	public void printLiteralDataTypesURI() {
+		otherLiteralTypesMap = MapUtil.sortByValue(otherLiteralTypesMap);
+		Iterator<String> itr = otherLiteralTypesMap.keySet().iterator();
+		while (itr.hasNext()) {
+			String key = itr.next();
+			Integer value = otherLiteralTypesMap.get(key);
+			System.out.println(String.format("%-60s\t %s", key, value));
+		}
 	}
 }

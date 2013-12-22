@@ -47,15 +47,18 @@ public class Main {
 		if (lit.getWasDumped()) {
 			lit.getLiteralFromFile();
 		}
-		
+		lit.printTriplesCount();
 		lit.printLiteralCount();
+		lit.printLiteralRatioAgainstTriples();
+		lit.printliteralTypesStats();
 		lit.printLiterlAverageLength();
+		lit.printLiteralDataTypesURI();
 
 		termProcessing tm = new termProcessing(lit.getLiteralsListDuplicates());
 		tm.printWordCount();
 		tm.printWordHistogram();
 		tm.printTermMapToFile();
-		
+
 	}
 
 	public void rdfFromDir(String path, String filePattern) {

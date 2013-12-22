@@ -15,7 +15,6 @@ import java.util.TreeMap;
 
 import java.util.Set;
 
-import rdf.literal.stats.test.MapUtil;
 
 public class termProcessing {
 
