@@ -6,12 +6,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -21,11 +19,12 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
 import org.apache.jena.riot.lang.PipedTriplesStream;
+import org.slf4j.Logger;
 
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.function.library.date;
 
 public class LiteralsProcessing {
+	Logger log = org.slf4j.LoggerFactory.getLogger(Main.class);
 
 	int tripleCounter = 0;
 
@@ -33,6 +32,8 @@ public class LiteralsProcessing {
 	int typedLiteral = 0;
 
 	Map<String, Integer> otherLiteralTypesMap = new HashMap<String, Integer>();
+
+	Map<String, Integer> prediateLiteralMap = new HashMap<String, Integer>();
 
 	final int threshold = 1000000;
 	final String literalsFile = "result/Literals.txt";
@@ -69,6 +70,7 @@ public class LiteralsProcessing {
 	}
 
 	public void extractLiteralFromFile(final String filePath) {
+		log.debug("Start itrating over the file: " + filePath);
 		PipedRDFIterator<Triple> iter = new PipedRDFIterator<Triple>();
 
 		final PipedRDFStream<Triple> inputStream = new PipedTriplesStream(iter);
@@ -94,10 +96,21 @@ public class LiteralsProcessing {
 		// far ahead of our consumption as the buffer size allows
 
 		int i = 0; // counter of when to dump list to disk
+
 		while (iter.hasNext()) {
 			Triple next = iter.next();
 			tripleCounter++;
 			if (next.getObject().isLiteral()) {
+
+				// Starting calculate literal regarding each predicate
+				String predicate = next.getPredicate().getURI();
+				if (prediateLiteralMap.containsKey(predicate)) {
+					Integer value = prediateLiteralMap.get(predicate);
+					prediateLiteralMap.put(predicate, value + 1);
+				} else {
+					prediateLiteralMap.put(predicate, 1);
+				}
+				// Finishing calculate literal regarding each predicate
 
 				if (next.getObject().getLiteralDatatype() == null) {
 					plainLiteral++;
@@ -129,6 +142,7 @@ public class LiteralsProcessing {
 			}
 		}
 
+		log.debug("Finish intrating over the file: " + filePath);
 	}
 
 	public void dumbToDisk() {
@@ -210,5 +224,19 @@ public class LiteralsProcessing {
 			Integer value = otherLiteralTypesMap.get(key);
 			System.out.println(String.format("%-60s\t %s", key, value));
 		}
+	}
+
+	public void printPrediateWithLiteralMap() {
+		prediateLiteralMap = MapUtil.sortByValue(prediateLiteralMap);
+		Iterator<String> itr = prediateLiteralMap.keySet().iterator();
+		while (itr.hasNext()) {
+			String key = itr.next();
+			Integer value = prediateLiteralMap.get(key);
+			System.out.println(String.format("%-60s\t %s", key, value));
+		}
+	}
+
+	public void printStatsToFile() {
+
 	}
 }

@@ -50,6 +50,7 @@ public class Main {
 		lit.printTriplesCount();
 		lit.printLiteralCount();
 		lit.printLiteralRatioAgainstTriples();
+		lit.printPrediateWithLiteralMap();
 		lit.printliteralTypesStats();
 		lit.printLiterlAverageLength();
 		lit.printLiteralDataTypesURI();

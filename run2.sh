@@ -1,1 +1,1 @@
-java -Xmx8000m -cp target/dependency/*:target/stats-0.0.1-SNAPSHOT.jar rdf.literal.stats.Main $1 $2
+java -Xmx2000m -Dlog4j.configuration=file:src/main/resources/log4j.properties -cp target/dependency/*:target/stats-0.0.1-SNAPSHOT.jar rdf.literal.stats.Main $1 $2
