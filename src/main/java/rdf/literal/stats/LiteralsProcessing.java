@@ -35,7 +35,7 @@ public class LiteralsProcessing {
 
 	Map<String, Integer> prediateLiteralMap = new HashMap<String, Integer>();
 
-	final int threshold = 1000000;
+	final int threshold = 100000000;
 	final String literalsFile = "result/Literals.txt";
 
 	private ArrayList<String> literalsListDuplicates = new ArrayList<String>();
