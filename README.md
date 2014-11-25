@@ -5,10 +5,9 @@ This is a tool for providing statistics about RDF data files in terms of literal
 
 Parsing RDF is done by the Jena arq (Apache License, Version 2.0).
 
-To compile the code:
+**To compile the code:**
 
-> mvn clean install
-
+> mvn clean install 
 > mvn dependency:copy-dependencies
 
 give ur self a permission to run the code below, if needed. Then,
@@ -17,7 +16,10 @@ give ur self a permission to run the code below, if needed. Then,
 
 The result will be printed to screen and to a directory named result with two files (termsMap.txt and stats.txt).
 
-Sample:
+**Licensing:**
+This code is licensed under the MIT License attached in the parent directory.
+
+**Output Sample:**
 
     Triples Count: 17686178
     Number of Literal objects with duplicates: 9129307
