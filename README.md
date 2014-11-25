@@ -7,8 +7,7 @@ Parsing RDF is done by the Jena arq (Apache License, Version 2.0).
 
 **To compile the code:**
 
-> mvn clean install
-
+> mvn clean install  
 > mvn dependency:copy-dependencies
 
 give yourself a permission to run the script below, if needed. Then,
