@@ -15,8 +15,8 @@ give yourself a permission to run the script below, if needed. Then,
 
     sh run2.sh <rdf path>
 
-The result will be printed to screen and to a directory named result with two files (termsMap.txt and stats.txt).
-stats.txt contains the same form as the sample below.
+The result will be printed to screen and to a directory named result with two files (termsMap.txt and stats.txt).  
+stats.txt contains the same form as the sample below.  
 termsMap.txt contains the words (while space tokened) included in the literal values.
 
 **Licensing:**
