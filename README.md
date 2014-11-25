@@ -11,7 +11,7 @@ Parsing RDF is done by the Jena arq (Apache License, Version 2.0).
 
 > mvn dependency:copy-dependencies
 
-give ur self a permission to run the code below, if needed. Then,
+give yourself a permission to run the script below, if needed. Then,
 
     sh run2.sh <rdf path>
 
