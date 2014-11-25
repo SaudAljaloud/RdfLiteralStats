@@ -63,6 +63,7 @@ This code is licensed under the MIT License attached in the parent directory.
     http://www.w3.org/2001/XMLSchema#dateTime                   	 2500000
     http://www.w3.org/2001/XMLSchema#integer                    	 2611805
     Number of words with duplicates: 83003158
+	Word count histogram
     1              	 412372
     2              	 186427
     3              	 61793
