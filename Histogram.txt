@@ -1,0 +1,8 @@
+Word count histogram: 
+1              	 41
+2              	 3
+4              	 1
+Word count histogram: 
+1              	 41
+2              	 3
+4              	 1

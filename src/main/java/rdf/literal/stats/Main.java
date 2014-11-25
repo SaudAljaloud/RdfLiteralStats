@@ -64,6 +64,8 @@ public class Main {
 		tm.printWordCount();
 		tm.printWordHistogram();
 		tm.printTermMapToFile();
+		tm.printHistogramToFile();
+		lit.printStatsToFile();
 
 	}
 

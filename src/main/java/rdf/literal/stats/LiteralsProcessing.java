@@ -23,10 +23,8 @@ import org.slf4j.Logger;
 
 import com.hp.hpl.jena.graph.Triple;
 
-
 /**
- * User: Saud Aljaloud
- * email: sza1g10@ecs.soton.ac.uk
+ * User: Saud Aljaloud email: sza1g10@ecs.soton.ac.uk
  */
 
 public class LiteralsProcessing {
@@ -243,6 +241,60 @@ public class LiteralsProcessing {
 	}
 
 	public void printStatsToFile() {
+		try {
+			FileWriter fw = new FileWriter("Stats.txt", true);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			bw.write("Triples Count: " + tripleCounter);
+			bw.newLine();
+			bw.write("Number of Literal objects with duplicates: "
+					+ getLiteralsListDuplicates().size());
+			bw.newLine();
+			bw.write("Number of Literal objects NO duplicates: "
+					+ getLiteralsListNODuplicates().size());
+			bw.newLine();
+
+			bw.write("Average literals against triples: "
+					+ ((float) getLiteralsListDuplicates().size() / (float) tripleCounter));
+			bw.newLine();
+
+			prediateLiteralMap = MapUtil.sortByValue(prediateLiteralMap);
+			Iterator<String> itr = prediateLiteralMap.keySet().iterator();
+			while (itr.hasNext()) {
+				String key = itr.next();
+				Integer value = prediateLiteralMap.get(key);
+				bw.write(String.format("%-60s\t %s", key, value));
+				bw.newLine();
+			}
+
+			bw.write("Plain Literals: " + plainLiteral);
+			bw.newLine();
+			bw.write("Typed-Literals: " + typedLiteral);
+			bw.newLine();
+
+			int length = 0;
+			for (int i = 0; i < getLiteralsListDuplicates().size(); i++) {
+				length = length + getLiteralsListDuplicates().get(i).length();
+
+			}
+
+			bw.write("The average length of literals: " + length
+					/ getLiteralsListDuplicates().size());
+			bw.newLine();
+
+			otherLiteralTypesMap = MapUtil.sortByValue(otherLiteralTypesMap);
+			Iterator<String> itr2 = otherLiteralTypesMap.keySet().iterator();
+			while (itr2.hasNext()) {
+				String key = itr2.next();
+				Integer value = otherLiteralTypesMap.get(key);
+				bw.write(String.format("%-60s\t %s", key, value));
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 }

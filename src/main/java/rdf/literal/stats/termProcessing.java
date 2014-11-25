@@ -16,8 +16,7 @@ import java.util.TreeMap;
 import java.util.Set;
 
 /**
- * User: Saud Aljaloud
- * email: sza1g10@ecs.soton.ac.uk
+ * User: Saud Aljaloud email: sza1g10@ecs.soton.ac.uk
  */
 
 public class termProcessing {
@@ -28,8 +27,8 @@ public class termProcessing {
 	List<String> wordList;
 	int threshold = 10000000;
 
-	final String termsFile = "result/terms.txt";
-	final String termMapFile = "result/termsMap.txt";
+	final String termsFile = "terms.txt";
+	final String termMapFile = "termsMap.txt";
 	private Boolean wasDumped = false;
 	Boolean isTermMapConstructed = false;
 
@@ -96,7 +95,7 @@ public class termProcessing {
 			termMap = MapUtil.sortByValue(termMap);
 
 			// /
-			System.out.println("Word count histogram:");
+			System.out.println("Word count histogram: ");
 			Map<Integer, Integer> histogrsmMap = histogramCal(termMap);
 			Map<Integer, Integer> sortedHistogramMap = new TreeMap<Integer, Integer>(
 					histogrsmMap);
@@ -206,7 +205,7 @@ public class termProcessing {
 	public void printTermMapToFile() {
 		if (isTermMapConstructed) {
 			try {
-				FileWriter fw = new FileWriter(termMapFile, false);
+				FileWriter fw = new FileWriter(termMapFile, true);
 				BufferedWriter bw = new BufferedWriter(fw);
 
 				Iterator<String> itr = termMap.keySet().iterator();
@@ -235,6 +234,37 @@ public class termProcessing {
 		}
 
 		System.out.println("Number of words with duplicates: " + termCounter);
+	}
+
+	public void printHistogramToFile() {
+
+		if (isTermMapConstructed) {
+
+			try {
+				FileWriter fw = new FileWriter("Histogram.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write("Word count histogram: ");
+				bw.newLine();
+				Map<Integer, Integer> histogrsmMap = histogramCal(termMap);
+				Map<Integer, Integer> sortedHistogramMap = new TreeMap<Integer, Integer>(
+						histogrsmMap);
+				Iterator<Integer> iterator3 = sortedHistogramMap.keySet()
+						.iterator();
+				while (iterator3.hasNext()) {
+					Integer key = iterator3.next();
+					Integer value = sortedHistogramMap.get(key);
+					bw.write(String.format("%-15s\t %s", key, value));
+					bw.newLine();
+				}
+				bw.flush();
+				bw.close();
+
+			} catch (Exception e) {
+
+			}
+
+		}
+
 	}
 
 }
