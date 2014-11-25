@@ -15,6 +15,10 @@ import java.util.TreeMap;
 
 import java.util.Set;
 
+/**
+ * User: Saud Aljaloud
+ * email: sza1g10@ecs.soton.ac.uk
+ */
 
 public class termProcessing {
 

@@ -3,6 +3,11 @@ package rdf.literal.stats;
 import java.io.File;
 import org.slf4j.Logger;
 
+/**
+ * User: Saud Aljaloud
+ * email: sza1g10@ecs.soton.ac.uk
+ */
+
 public class Main {
 
 	/**

@@ -1,5 +1,10 @@
 package rdf.literal.stats.test;
 
+/**
+ * User: Saud Aljaloud
+ * email: sza1g10@ecs.soton.ac.uk
+ */
+
 public class testDecimal {
 	
 	public static void main(String[] args) {

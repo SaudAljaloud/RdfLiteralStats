@@ -12,6 +12,11 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
+/**
+ * User: Saud Aljaloud
+ * email: sza1g10@ecs.soton.ac.uk
+ */
+
 public class NquadsTest {
 
 	

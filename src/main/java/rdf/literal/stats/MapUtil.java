@@ -2,6 +2,10 @@ package rdf.literal.stats;
 
 import java.util.*;
 
+/**
+ * User: Saud Aljaloud
+ * email: sza1g10@ecs.soton.ac.uk
+ */
 
 public class MapUtil
 {

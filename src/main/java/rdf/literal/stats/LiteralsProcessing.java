@@ -23,6 +23,12 @@ import org.slf4j.Logger;
 
 import com.hp.hpl.jena.graph.Triple;
 
+
+/**
+ * User: Saud Aljaloud
+ * email: sza1g10@ecs.soton.ac.uk
+ */
+
 public class LiteralsProcessing {
 	Logger log = org.slf4j.LoggerFactory.getLogger(Main.class);
 
