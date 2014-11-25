@@ -12,7 +12,7 @@ Parsing RDF is done by the Jena arq (Apache License, Version 2.0).
 
 give yourself a permission to run the script below, if needed. Then,
 
-    sh run2.sh <rdf path>
+    sh run2.sh <dir/to/rdf>
 
 The result will be printed to screen and to three files (termsMap.txt, Histogram.txt stats.txt).  
 stats.txt contains the same form as the sample below.  
