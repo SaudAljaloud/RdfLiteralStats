@@ -92,6 +92,7 @@ public class termProcessing {
 			termMap = MapUtil.sortByValue(termMap);
 
 			// /
+			System.out.println("Word count histogram:");
 			Map<Integer, Integer> histogrsmMap = histogramCal(termMap);
 			Map<Integer, Integer> sortedHistogramMap = new TreeMap<Integer, Integer>(
 					histogrsmMap);
