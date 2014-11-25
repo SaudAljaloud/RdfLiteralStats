@@ -1,3 +1,5 @@
+<p>RdfLiteralStats</p>
+
 This is a tool for providing statistics about RDF data files in terms of literal usage.
 
 Parsing RDF is done by the Jena arq (Apache License, Version 2.0).
